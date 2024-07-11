@@ -8,11 +8,14 @@
 
 import UIKit
 
+import AVFoundation
+
 class SuperTunes: UIViewController {
     
     var searchResults = [SearchResult]() // Array to hold search results
     var hasSearched = false // Flag to check if search has been performed
     var isLoading = false // Flag to indicate if data is being loaded
+    var player: AVPlayer? // Add this property for audio playback
 
     @IBOutlet weak var searchBar: UISearchBar! // Outlet for search bar
     @IBOutlet weak var tableView: UITableView! // Outlet for table view
@@ -60,11 +63,26 @@ class SuperTunes: UIViewController {
         do {
             let decoder = JSONDecoder()
             let result = try decoder.decode(ResultArray.self, from: data) // Decode JSON data
-            return result.results
+            let uniqueResults = filterUniqueResults(results: result.results)
+            return uniqueResults
         } catch {
             print("JSON Error: \(error)")
             return []
         }
+    }
+    
+    func filterUniqueResults(results: [SearchResult]) -> [SearchResult] {
+        var seen = Set<String>()
+        var uniqueResults = [SearchResult]()
+        
+        for result in results {
+            let identifier = "\(result.artist)-\(result.type)-\(String(describing: result.trackName))"
+            if !seen.contains(identifier) {
+                seen.insert(identifier)
+                uniqueResults.append(result)
+            }
+        }
+        return uniqueResults
     }
 
     func showNetworkError() {
@@ -79,6 +97,12 @@ class SuperTunes: UIViewController {
         DispatchQueue.main.async {
             self.present(alert, animated: true, completion: nil)
         }
+    }
+    
+    func playAudio(url: URL) {
+        let playerItem = AVPlayerItem(url: url)
+        player = AVPlayer(playerItem: playerItem)
+        player?.play()
     }
 }
 
@@ -135,7 +159,11 @@ extension SuperTunes: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true) // Deselect the row after selection
+//        tableView.deselectRow(at: indexPath, animated: true) // Deselect the row after selection
+        let searchResult = searchResults[indexPath.row]
+        if let previewUrlString = searchResult.previewUrl, let previewUrl = URL(string: previewUrlString) {
+            playAudio(url: previewUrl) // Play the audio preview
+        }
     }
 
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
