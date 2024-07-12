@@ -1,10 +1,3 @@
-//
-//  SearchResult.swift
-//  SuperTunes
-//
-//  Created by Mehdi Labbafi on 2024-07-03.
-//
-
 class ResultArray: Codable {
     var resultCount = 0
     var results = [SearchResult]()

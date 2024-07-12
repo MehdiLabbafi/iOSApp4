@@ -47,6 +47,10 @@
                         <nil key="textColor"/>
                         <color key="highlightedColor" name="Color"/>
                     </label>
+                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="HhX-8r-sxc">
+                        <rect key="frame" x="353" y="30" width="20" height="20"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    </activityIndicatorView>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="bottom" secondItem="HeN-Cp-CLh" secondAttribute="bottom" constant="16" id="0Hb-ya-ppS"/>
@@ -60,6 +64,7 @@
                 </constraints>
             </tableViewCellContentView>
             <connections>
+                <outlet property="activityIndicator" destination="HhX-8r-sxc" id="GCd-n8-Rpo"/>
                 <outlet property="artistNameLabel" destination="HeN-Cp-CLh" id="deg-VR-aht"/>
                 <outlet property="artworkImageView" destination="ApF-dc-D9h" id="WJi-vU-vEV"/>
                 <outlet property="nameLabel" destination="49O-H7-3Gd" id="duF-na-4ku"/>
